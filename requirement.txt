@@ -4,3 +4,4 @@ wget
 googledrivedownloader
 requests
 tensorboardX
+pandas
