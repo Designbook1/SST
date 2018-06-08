@@ -65,16 +65,15 @@ class SST(nn.Module):
         sources_pre = list()
         sources_next = list()
         x_pre = self.forward_vgg(x_pre, self.vgg, sources_pre)
-        x_next = self.forward_vgg(x_next, self.vgg, sources_next)
-        # x_next.register_hook(lambda grad: print('start:', grad.sum().data[0]))
         x_pre = self.forward_extras(x_pre, self.extras,
                                     sources_pre)
-        x_next = self.forward_extras(x_next, self.extras,
-                                     sources_next)
-
         x_pre = self.forward_selector_stacker1(
             sources_pre, l_pre, self.selector
         )
+
+        x_next = self.forward_vgg(x_next, self.vgg, sources_next)
+        x_next = self.forward_extras(x_next, self.extras,
+                                     sources_next)
         x_next = self.forward_selector_stacker1(
             sources_next, l_next, self.selector
         )
@@ -201,10 +200,9 @@ class SST(nn.Module):
         :param labels: [B, N, 1, 1, 2]
         :return: the connected feature
         '''
-        sources = [
-            F.relu(net(x), inplace=True) for net, x in zip(selector, sources)
-        ]
-
+        # sources = [
+        #     F.relu(net(x), inplace=True) for net, x in zip(selector, sources)
+        # ]
         res = list()
         for label_index in range(labels.size(1)):
             label_res = list()
@@ -231,7 +229,6 @@ class SST(nn.Module):
             [stacker1_pre_output, stacker1_next_output],
             1
         )
-
         return output
 
     def forward_final(self, x, final_net):
