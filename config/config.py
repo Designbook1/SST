@@ -5,9 +5,10 @@ configure_names = ['init_test_mot16', 'init_test_mot17', 'init_train_mot17',
                    'init_train_kitti', 'init_test_kitti',
                    'init_train_ua', 'init_test_ua'
                    'exp_test_mot17_final_net', 'exp_train_mot17_final_net',
+                   'exp_train_mot17_mean',
                    'init_train_mot17_final_net_lab', 'exp_test_mot17_final_net']
 
-current_select_configure = 'init_test_ua'
+current_select_configure = 'exp_train_mot17_mean'
 
 config = {
     'mot_root': r'/home/ssm/ssj/dataset/MOT17',
@@ -98,9 +99,7 @@ def init_test_mot17():
     config['save_combine'] = False
     config['type'] = 'train'
 
-
 all_functions += [init_test_mot17]
-
 
 def init_train_mot17():
     config['epoch_size'] = 664
@@ -206,6 +205,34 @@ def exp_train_mot17_final_net_lab():
 
 all_functions += [exp_train_mot17_final_net_lab]
 
+
+def exp_train_mot17_mean():
+    config['epoch_size'] = 664
+    config['mot_root'] = '/home/ssm/ssj/dataset/MOT17'
+    config['base_net_folder'] = '/home/ssm/ssj/weights/MOT17/vgg16_reducedfc.pth'
+    config['log_folder'] = '/home/ssm/ssj/weights/MOT17/0609-E120-M80-G30-log'
+    config['save_folder'] = '/home/ssm/ssj/weights/MOT17/0609-E120-M80-G30-weights'
+    config['save_images_folder'] = '/home/ssm/ssj/weights/MOT17/0609-E120-M80-G30-images'
+    config['type'] = 'train'
+    config['dataset_type'] = 'train'
+    config['resume'] = None
+    config['detector'] = 'FRCNN'
+    config['start_iter'] = 0
+    config['iteration_epoch_num'] =  120
+    config['iterations'] = config['start_iter'] + config['epoch_size']*config['iteration_epoch_num'] + 50
+    config['batch_size'] = 8
+    config['learning_rate'] = 1e-2
+    config['learning_rate_decay_by_epoch'] = (50, 80, 100, 110)
+    config['save_weight_every_epoch_num'] = 5
+    config['min_gap_frame'] = 0
+    config['max_gap_frame'] = 30
+    config['false_constant'] = 10
+    config['num_workers'] = 16
+    config['cuda'] = True
+    config['max_object'] = 80
+    config['min_visibility'] = 0.3
+
+all_functions += [exp_train_mot17_mean]
 
 def init_train_kitti():
     config['kitti_image_root'] = '/home/ssm/ssj/dataset/KITTI/tracking/image_2'

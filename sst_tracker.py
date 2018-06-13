@@ -253,7 +253,6 @@ class Track:
         return bad_num / len(self.f)
 
 
-
 class TrackUtil:
     @staticmethod
     def convert_detection(detection):
